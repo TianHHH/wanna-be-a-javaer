@@ -1,0 +1,26 @@
+Spring:
+	1. @Autowired 和 @Resource 的区别
+	
+	2. Spring的常用注解
+
+	3. Spring中事务的分类
+
+	4. Spring事务的传播行为都有哪些
+
+	5. Spring事务中有哪些隔离级别
+
+	6. Spring事务的失效场景
+
+	7. Bean的生命周期是什么
+
+
+SpringMVC:
+	1. SpringMVC的常用注解
+
+
+
+MyBatis:
+	1. # 和 $的区别, 哪个更安全
+
+
+SpringBoot:

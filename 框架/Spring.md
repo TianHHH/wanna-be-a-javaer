@@ -1,35 +1,50 @@
+# 介绍一下IOC
+
+IOC 的全称是 "Inversion of Control" **(也就是控制反转), 它不是一种具体的技术, 而是一种设计思想**. 其中控制指的是对象创建的权利, 反转就是指将控制权交给外部的 IOC 容器
+
+**<font style="color:blue">使⽤ IOC 后就不需要自己去创建某个类的实例, 而是由 IOC 容器去创建</font>**. 当再需要使用某个对象时, 直接到容器中去获取就可以了
+
+另外将对象之间的相互依赖关系交给 IOC 容器来管理, 并由 IOC 容器完成对象的注入. 这样可以很大程度上简化应用的开发, 把应用从复杂的依赖关系中解放出来
+
+## 和DI的区别
+
+DI, 也就是依赖注入, 它是 IOC 的一种主要实现方式. 所谓依赖注入, **就是<font style="color:blue">通过外部把一个对象所依赖的其它对象注入到其中</font>, 而不是在类内部创建依赖对象**
+
+DI 的实现方式主要有通过**构造函数注入、Setter 方法注入或者直接在字段上注入**. 这个注入的过程, 正是容器在替程序员管理控制权的体现
+
+IOC 和 DI 其实只是同⼀个概念的不同⻆度描述, 都是用来实现对象解耦的. 只不过 IOC 是一种设计思想, 而 DI 是一种具体的实现技术
+
 # @Autowired和@Resource的区别
 
-1. `@Autowired`是Spring提供的注解; `@Resource`是JDK(JSR-250)提供的注解
-2. **<font style="color:blue">`@Autowired`自身只能按类型注入; </font>`@Resource`默认按名称注入, 也支持根据类型注入**
+1. @Autowired 是Spring提供的注解; @Resource 是 JDK (JSR-250) 提供的注解
+2. **<font style="color:blue">@Autowired 自身只能按类型注入; </font>@Resource 默认按名称注入, 也支持根据类型注入**
 3. `@Autowired`默认情况下要求依赖对象必须存在, 但是如果想设为非必须可以通过**设置required属性为false**来实现. **<font style="color:blue">`@Resource`虽然默认情况下也是要求依赖对象必须存在, 但不能设为非必须</font>**
-4. **如果想让`@Autowired`支持按名称装配, 需要搭配`@Qualifirer`使用**. 一起使用时 Spring 会先按类型获取所有候选Bean, 然后在这些候选中用`@Qualifier`指定的名称进行精确匹配
+4. **如果想让 @Autowired 支持按名称装配, 需要搭配 @Qualifirer 使用**. 一起使用时 Spring 会先按类型获取所有候选Bean, 然后在这些候选中用 @Qualifier 指定的名称进行精确匹配
 
 
-> **`@Qualifier`是一个限定符注解, 不能单独使用**, 必须配合 `@Autowired` 或 `@Inject` 才能发挥作用. **<font style="color:blue">另外该注解有强约束过滤作用</font>** (**即使类型唯一匹配, 只要名称不匹配也不会注入, 而是抛出异常**)
+> **@Qualifier 是一个限定符注解, 不能单独使用**, 必须配合 @Autowired 或 @Inject 才能发挥作用. **<font style="color:blue">另外该注解有强约束过滤作用</font>** (**即使类型唯一匹配, 只要名称不匹配也不会注入, 而是抛出异常**)
 
-5. **`@Resource`有两个重要的属性: name 和 type**. 如果没有指定 name 属性, 当注解标注在字段上即默认取字段的名称作为Bean名称寻找依赖对象; 当注解标注在属性的 setter ⽅法上, 即默认取属性名作为Bean名称寻找依赖对象 (属性名 = 去掉方法名的 `set` 前缀, 然后将首字母小写)
-
-   - **如果两个属性都没指定的话就会<font style="color:blue">先按默认名称查找Bean, 按照默认的名称找不到依赖对象的话就会回退到按类型装配 (默认行为)</font>**
+5. **@Resource 有两个重要的属性: name 和 type**. 如果没有指定 name 属性, 当注解标注在字段上即默认取字段的名称作为Bean名称寻找依赖对象; 当注解标注在属性的 setter ⽅法上, 即默认取属性名作为Bean名称寻找依赖对象 (属性名 = 去掉方法名的 set 前缀, 然后将首字母小写)
+- **如果两个属性都没指定的话就会<font style="color:blue">先按默认名称查找Bean, 按照默认的名称找不到依赖对象的话就会回退到按类型装配 (默认行为)</font>**
 
 
    - **单独指定name属性的话, 就只能按名称进行装配; 单独指定type属性的话就只能按照类型装配**; 两个都指定时, 必须同时满足指定的name和type才能注入成功
 
 > 当一个接口存在多个实现类的情况下:
 >
-> `@Autowired` 和 `@Resource` 都需要通过名称才能正确匹配到对应的Bean
+> @Autowired 和 @Resource 都需要通过名称才能正确匹配到对应的Bean
 
----
+## 补充说明
 
-> JSR 全称是 **Java Specification Request**
->
-> 翻译成中文就是**Java规范提案**, 也可以叫 Java 官方标准草案. **它是由 Java 官方**(以前是 Sun, 现在是 Oracle 和 Jakarta EE 社区 --  Sun被Oracle收购了)**<font style="color:red">提出的一个个标准, 每个标准都有一个编号</font>**
->
-> @PostConstruct 和 @PreDestory 就是JSR-250定义的规范注解. 
->
-> Spring只是说:" 哦, JSR-250 是官方标准, 那我也支持这个行为". 所以 Spring 没有发明这个注解, 它只是**遵守标准**. 换一个框架用这个注解也一样能跑
->
-> 总结: JSR 告诉大家某个功能应该怎么设计; 怎么命名, Spring / Hibernate等框架不是发明它们, 而是"支持这些标准", 这样写的代码就能在不同框架中通用
+JSR 全称是 **Java Specification Request**
+
+翻译成中文就是 **Java 规范提案**, 也可以叫 Java 官方标准草案. **它是由 Java 官方**(以前是 Sun, 现在是 Oracle 和 Jakarta EE 社区 --  Sun 被 Oracle 公司收购了)**<font style="color:blue">提出的一个个标准, 每个标准都有一个编号</font>**
+
+@PostConstruct 和 @PreDestory 就是 JSR-250 定义的规范注解
+
+可以理解成 Spring 只是说:" 哦, JSR-250 是官方标准, 那我也支持这个行为". 所以 Spring 没有发明这个注解, 它只是**遵守标准**. 换一个框架用这个注解也一样能跑
+
+总结: JSR 告诉大家某个功能应该怎么设计; 怎么命名, Spring / Hibernate 等框架不是发明它们, 而是"支持这些标准", 这样写的代码就能在不同框架中通用
 
 # Spring的常用注解
 
@@ -171,7 +186,7 @@ Spring将事务管理的核心抽象为一个事务管理器(`TransactionManager
 
 **`Propagation.PROPAGATION_REQUIRED`**
 
-> 对应`TransactionDefinition.PROPAGATION_REQUIRED`(底层int值为0)
+> 对应 `TransactionDefinition.PROPAGATION_REQUIRED`(底层 int 值为 0)
 
 **<font style="color:blue">这是`@Transactional`默认的事务传播行为</font>**
 
@@ -204,15 +219,15 @@ Class B {
 }
 ```
 
-**如果`aMethod()`发生异常回滚, `bMethod()`不会跟着回滚**, 因为`bMethod()`开启了独立的事务
+**如果 `aMethod()` 发生异常回滚, `bMethod()` 不会跟着回滚**, 因为 `bMethod()` 开启了独立的事务
 
 
 
-但是要注意: 如果`bMethod()`抛出了未被捕获的异常并且这个异常满足事务回滚规则的话, `aMethod()`同样也会回滚. **<font style="color:blue">但本质并不是因为事务传播链互相影响</font>**
+但是要注意: 如果 `bMethod()` 抛出了未被捕获的异常并且这个异常满足事务回滚规则的话, `aMethod()` 同样也会回滚. **<font style="color:blue">但本质并不是因为事务传播链互相影响</font>**
 
-- 而是因为异常从`bMethod()`直接抛回了`aMethod()` -- 即异常会**一路上传到`aMethod()`**
+- 而是因为异常从 `bMethod()` 直接抛回了 `aMethod()` -- 即异常会**一路上传到 `aMethod()`**
 - Spring事务管理的默认回滚规则是: **遇到未捕获的 RuntimeException 或 Error, 就回滚当前方法所在的事务**. 对于**受检异常(Checked Exception)**则不会自动回滚
-  - 如果你想要回滚特定的异常类型的话, 可以使用`rollbackFor`属性显式指定: 
+  - 如果你想要回滚特定的异常类型的话, 可以使用 `rollbackFor` 属性显式指定: 
 
 
 ```java
@@ -223,7 +238,7 @@ Class B {
 
 **`Propagation.NESTED`**: 如果当前已经存在事务, **则在当前事务内开启一个嵌套事务(通过 Savepoint 实现). 如果没有事务, 则与 REQUIRED 表现一致, 新建一个事务**
 
-> 对应`TransactionDefinition.PROPAGATION_NESTED` (底层int值为6)
+> 对应 `TransactionDefinition.PROPAGATION_NESTED` (底层 int 值为 6)
 
 - **<font style="color:blue">嵌套事务不是完全独立的新事务, 而是在当前事务中加了"保存点(Savepoint)"</font>**
 - 如果嵌套事务抛异常回滚, 只会回滚到 savepoint, **外部事务可以选择继续提交或回滚**
@@ -267,7 +282,7 @@ public class ItemService {
 - **如果当前存在事务, `MANDATORY`方法会加入当前事务**, 行为和 REQUIRED 一样
 - 如果当前没有事务, Spring 会直接抛出异常, 而不是自动新建事务
 
-> 对应`TransactionDefinition.PROPAGATION_MANDATORY` (底层int值为2)
+> 对应 `TransactionDefinition.PROPAGATION_MANDATORY` (底层 int 值为 2)
 
 ```java
 @Service
@@ -290,13 +305,13 @@ public void businessOperation() {
 - **有事务环境时, 抛异常**, 不允许方法在事务中被调用
 - 没有事务环境时, 方法正常运行, 只是**不受事务保护**
 
-> 对应`TransactionDefinition.PROPAGATION_NEVER` (底层int值为4)
+> 对应 `TransactionDefinition.PROPAGATION_NEVER` (底层 int 值为 4)
 
 ---
 
 `Propagation.SUPPORTS`: **<font style="color:blue">如果当前存在事务, 则加入该事务; 如果当前没有事务, 则以非事务的方式继续运行</font>**
 
-> 对应`TransactionDefinition.PROPAGATION_SUPPORTS` (底层int值为1)
+> 对应 `TransactionDefinition.PROPAGATION_SUPPORTS` (底层 int 值为 1)
 
 - 即如果外层已经有事务, `SUPPORTS`方法会加入当前事务, 受统一事务控制
 
@@ -308,7 +323,7 @@ public void businessOperation() {
 
 ### 补充说明
 
-Q: 没加 `@Transactional` 的方法被加了事务的方法调用时, 事务行为是什么样的?
+Q: 没加 @Transactional 的方法被加了事务的方法调用时, 事务行为是什么样的?
 
 ```java
 @Transactional
@@ -325,13 +340,13 @@ public void nonTransactionalMethod() {
 
 
 
-A: 事务边界由外层加了`@Transactional`的方法控制, **`nonTransactionalMethod()`运行期间, 依然在这个事务的上下文中**, 本质上和`transactionalMethod()`的其他代码没有区别, 只是这个方法没有显式声明事务而已
+A: 事务边界由外层加了 @Transactional 的方法控制, **`nonTransactionalMethod()`运行期间, 依然在这个事务的上下文中**, 本质上和 `transactionalMethod()` 的其他代码没有区别, 只是这个方法没有显式声明事务而已
 
 - 即: **<font style="color:blue">只要是同一个调用栈, 外层事务开启后</font>, 里面所有代码(不管有没有加`@Transactional`)都在这个事务里运行**
 
 ## Spring中事务的隔离级别
 
-`TransactionDefinition`中一共定义了5种事务隔离级别:
+TransactionDefinition 中一共定义了5种事务隔离级别:
 
 - **`ISOLATION_DEAFULT`: 使用数据库默认的隔离级别, <font style="color:blue">依赖于具体数据库</font>**
   - 如Oracle是`READ_COMMITTED`, MySQL是`REPEATABLE_READ`
@@ -343,7 +358,7 @@ A: 事务边界由外层加了`@Transactional`的方法控制, **`nonTransaction
 
 ---
 
-**这些常量就是在`@Transactional`注解中设置 `isolation` 参数的取值来源**, 例如:
+**这些常量就是在 @Transactional 注解中设置 isolation 参数的取值来源**, 例如:
 
 ```java
 // 其中的 Isolation.REPEATABLE_READ 实际上是引用了: 
@@ -353,7 +368,7 @@ A: 事务边界由外层加了`@Transactional`的方法控制, **`nonTransaction
 
 > **原理简述: Spring 在开启事务时, 会通过 `PlatformTransactionManager`**
 >
-> 比如`DataSourceTransactionManager`**读取`TransactionDefinition`中的这些配置, <font style="color:blue">然后调用底层JDBC的API来设置真正的数据库隔离级别</font>**
+> 比如 `DataSourceTransactionManager` **读取 TransactionDefinition 中的这些配置, <font style="color:blue">然后调用底层 JDBC 的 API 来设置真正的数据库隔离级别</font>**
 >
 > ```java
 > connection.setTransactionIsolation(int level)
@@ -363,7 +378,7 @@ A: 事务边界由外层加了`@Transactional`的方法控制, **`nonTransaction
 
 补充说明:
 
-**Spring 并不重新实现事务, 而是<font style="color:blue">通过`TransactionDefinition`把隔离级别等事务特性抽象出来, 转交给底层数据库执行</font>**
+**Spring 并不重新实现事务, 而是<font style="color:blue">通过 TransactionDefinition 把隔离级别等事务特性抽象出来, 转交给底层数据库执行</font>**
 
 - **即 Spring 的常量只是一个中间层抽象, 真正起作用的还是底层数据库的事务机制**
 
@@ -373,21 +388,21 @@ Spring在每个事务开始前, 会获取当前数据库连接, 然后通过 JDB
 
 ## Spring事务的失效场景
 
-1. **方法定义问题**: Spring事务依赖 AOP 代理, 而代理不能拦截非 public 方法以及 final / static 修饰的方法, 因此这些方法上的`@Transactional`注解不会生效
+1. **方法定义问题**: Spring 事务依赖 AOP 代理, 而代理不能拦截非 public 方法以及 final / static 修饰的方法, 因此这些方法上的 @Transactional 注解不会生效
    - **<font style="color:blue">解决方案: 确保事务方法为 public 且不被 final / static 修饰</font>**
 
 > protected修饰的方法要看情况: 如果使用的是CGLIB代理(即当前类没有实现接口, 或配置强制使用 CGLIB)就可以生效. 如果是JDK动态代理的话就不会生效
 >
 > **但为了事务安全 & 兼容性和可维护性, 永远使用  public 方法来声明事务**. 即使 protected 方法有可能生效, **也不是标准做法**
 
-2. **同类方法互调(自调用)**: **当一个`@Transactional`方法<font style="color:blue">在同一类中被另一个方法直接调用时, 不会通过代理对象进行调用</font>, 事务无法生效**
+2. **同类方法互调(自调用)**: **当一个@Transactional方法<font style="color:blue">在同一类中被另一个方法直接调用时, 不会通过代理对象进行调用</font>, 事务无法生效**
 
-   - Spring事务依赖代理对象对方法调用做"切面增强", **如果用`this.method()`调用另一个事务方法, 是直接调用原始类代码**, 绕过了Spring的代理机制, 事务逻辑完全不会触发
+   - Spring事务依赖代理对象对方法调用做"切面增强", **如果用 this.method() 调用另一个事务方法, 是直接调用原始类代码**, 绕过了 Spring 的代理机制, 事务逻辑完全不会触发
 
    - 解决方案: 
 
      - **<font style="color:blue">将事务方法抽取到另一个类中, 通过依赖注入调用</font>**
-     - **通过`AopContext.currentProxy()`获取当前代理对象**
+     - **通过 `AopContext.currentProxy()` 获取当前代理对象**
 
      ```java
      // 需要启用 exposeProxy = true (只能在配置类 / 启动类中使用)
@@ -396,9 +411,9 @@ Spring在每个事务开始前, 会获取当前数据库连接, 然后通过 JDB
 
      - 使用 `TransactionTemplate` 手动控制事务
 
-3. 异常类型不匹配: Spring默认只在出现`RuntimeException`或`Error`时才会回滚事务. **<font style="color:blue">如果抛出的是检查异常(也叫编译时异常)不会触发事务回滚</font>**
+3. 异常类型不匹配: Spring默认只在出现 `RuntimeException` 或 `Error` 时才会回滚事务. **<font style="color:blue">如果抛出的是检查异常(也叫编译时异常)不会触发事务回滚</font>**
 
-   - 解决方案: **通过`rollbackFor`指定**需要回滚的异常类型, 比如:
+   - 解决方案: **通过 rollbackFor 指定**需要回滚的异常类型, 比如:
 
    ```java
    @Transactional(rollbackFor = Exception.class)
@@ -407,30 +422,30 @@ Spring在每个事务开始前, 会获取当前数据库连接, 然后通过 JDB
 
 4. 多线程环境: **Spring事务仅在当前线程内有效**, 若在一个事务方法中启动新线程, 则新线程不受事务的控制. 这是**<font style="color:blue">因为新线程中的操作脱离了原事务的上下文</font>**
 
-   - Spring使用一个叫`TransactionSynchronizationManager`的类将事务状态绑定到当前线程, **也就是基于`ThreadLocal`绑定. 而子线程是新的线程, `ThreadLocal`是线程隔离的**, 子线程没有原始事务的上下文, 自然也不会被AOP增强
+   - Spring使用一个叫 `TransactionSynchronizationManager` 的类将事务状态绑定到当前线程, **也就是基于 ThreadLocal 绑定. 而子线程是新的线程, ThreadLocal 是线程隔离的**, 子线程没有原始事务的上下文, 自然也不会被 AOP 增强
 
    - 解决方案:
      - **<font style="color:blue">在子线程中手动使用编程式事务进行管理</font>**
      - 避免在事务中创建新线程
-     - **将目标方法上加入 `@Async`, 使其在新线程中执行** -- **加上该注解就不需要手动开启新线程了**, Spring 会自动将方法提交到它管理的线程池中执行. 同时再加上 `@Transactional`, **使得该方法在新线程中也能开启自己的独立事务**
+     - **将目标方法上加入 @Async, 使其在新线程中执行** -- **加上该注解就不需要手动开启新线程了**, Spring 会自动将方法提交到它管理的线程池中执行. 同时再加上 @Transactional, **使得该方法在新线程中也能开启自己的独立事务**
 
-> 使用 `@Async` 时**新线程中开启的事务和原事务是两个完全独立的事务上下文**
+> 使用 @Async 时**新线程中开启的事务和原事务是两个完全独立的事务上下文**
 >
 > **新事务出错回滚**, 不会影响原事务; **原事务回滚**, 也不会影响已提交的异步事务
 
-5. 未使用Spring管理的类: **<font style="color:blue">若在未被Spring管理的类中使用`@Transactional`, 事务不会生效</font>**, 因为Spring无法对该类生成代理
-   - 解决方案: **确保`@Transactional`用于由Spring管理的Bean**
-6. 事务的传播行为设置不当: 在使用Spring的事务传播机制时, 像`REQUIRES_NEW`这样的传播行为会挂起外部事务, 并开启一个完全独立的新事务. 因此即使外部事务回滚, 内部事务也不会被回滚
+5. 未使用 Spring 管理的类: **<font style="color:blue">若在未被 Spring 管理的类中使用 @Transactional, 事务不会生效</font>**, 因为 Spring 无法对该类生成代理
+   - 解决方案: **确保 @Transactional 用于由 Spring 管理的 Bean**
+6. 事务的传播行为设置不当: 在使用 Spring 的事务传播机制时, 像 `REQUIRES_NEW` 这样的传播行为会挂起外部事务, 并开启一个完全独立的新事务. 因此即使外部事务回滚, 内部事务也不会被回滚
    - 因此**在设置事务传播属性时, 必须根据业务需要明确是要"隔离"还是"嵌套"行为, 以防事务失效或产生意外提交 / 回滚的问题**
-7. 事务超时时间设置不当: 当给一个事务设置了`timeout`属性, 但是它没有在规定时间内完成的话, Spring会抛出`TransactionTimedOutException`, 并自动触发回滚 (timeout 的单位是**秒**)
+7. 事务超时时间设置不当: 当给一个事务设置了 timeout 属性, 但是它没有在规定时间内完成的话, Spring会抛出`TransactionTimedOutException`, 并自动触发回滚 (timeout 的单位是**秒**)
    - 这种场景较常见于执行较长时间的数据库操作
    - 解决方案: 为长时间任务合理设置事务超时时间
 
-8. 某些数据库和存储引擎并不支持事务, **比如MySQL中的MyISAM引擎. <font style="color:blue">在这种条件下即使使用了`@Transactional`注解, 事务也不会生效</font>**
+8. 某些数据库和存储引擎并不支持事务, **比如 MySQL 中的 MyISAM 引擎. <font style="color:blue">在这种条件下即使使用了 @Transactional 注解, 事务也不会生效</font>**
 
    - 解决方案: 使用支持事务的存储引擎或更换支持事务的数据库系统
 
-9. 事务管理器未启用: 在使用Spring时, 若未在配置类中添加`@EnableTransactionManagement`, 或未正确配置`PlatformTransactionManager`, `@Transactional`注解将不会生效
+9. 事务管理器未启用: 在使用 Spring 时, 若未在配置类中添加 `@EnableTransactionManagement`, 或未正确配置 `PlatformTransactionManager`, @Transactional 注解将不会生效
 
    - 解决方案: 检查 Spring 配置是否启用了事务注解驱动, 并确保已正确绑定数据源与事务管理器
    - **<font style="color:blue">但在 Spring Boot 中, 上述配置由自动装配完成, 通常无需手动指定</font>**
@@ -493,7 +508,7 @@ System.out.println("4. 使用Bean");
 
 ```
 
-手动重写一下`BeanPostProcessor`方便观察执行流程
+手动重写一下 BeanPostProcessor 方便观察执行流程
 
 ```java
 public class MyProcessor implements BeanPostProcessor{
@@ -520,7 +535,7 @@ public class MyProcessor implements BeanPostProcessor{
 }
 ```
 
-之后把自己写的`BeanPostProcessor`交给Spring容器管理
+之后把自己写的 BeanPostProcessor 交给 Spring 容器管理
 
 ```xml
 <bean id="processor" class="com.java.bean.MyProcessor"></bean>
@@ -565,11 +580,149 @@ public class MyProcessor implements BeanPostProcessor{
 	- 至于内存是否立即释放, 则由JVM的垃圾回收机制决定, 不属于Spring的控制范围
 ```
 
+# AOP相关问题
+
+## 介绍一下AOP
+
+AOP 全称是 "Aspect Oriented Programming", 翻译过来就是面向切面编程, **是 Spring 框架的两大特性之一. AOP 其实就是 OOP (也就是面向对象编程) 的有益补充**, 与 OOP 相辅相成
 
 
 
+需要 AOP 的原因其实就是 OOP 的设计有局限性, **<font style="color:blue">OOP 因为其继承、多态的特性可以很好地提高代码的复用性</font>, 比较擅长处理功能的纵向扩展**. 每个类各司其职, 新增功能可以通过继承或组合的方式实现, 对原有代码改动最小
+
+**但它并不适合定义横向的关系**, 比如日志功能. 日志代码往往横向地散布在所有对象层次中, 而与它对应的对象核心功能毫无关系. 这种散布在各处的无关代码被称为横切, **在 OOP 设计中, 它导致了大量代码的重复,** 不利于各个模块的重用
 
 
+
+**而 AOP 技术恰恰相反, 擅长处理功能的水平扩展, 在多个模块之间统一增加某些"通用功能"**, 与业务逻辑本身无关, 但对所有模块都适用. **<font style="color:blue">比如加日志记录、事务控制、权限校验等功能</font>**
+
+AOP会把这些会影响多个模块的功能从业务逻辑中剥离出来, 抽取成切面来统一维护
+
+## 怎么使用AOP
+
+首先启用 AOP 功能, **<font style="color:blue">然后使用 @Aspect 注解标注某个类是一个切面类</font>, 同时配合 @Component 等注解将切面类同时注册为 Bean**, 使其能被 Spring 容器扫描到
+
+
+
+**之后在 @Pointcut 注解中定义切入点表达式**, 有两种主要使用的表达式形式
+
+- **第一种是使用 execution**, 在其括号内部要按顺序分别指定 **<font style="color:blue">`访问修饰符 方法返回值 方法所在类的全类名.方法名 (参数列表)`</font>**
+  - 其中在访问修饰符和方法返回值的部分可以用一个 * 替代, 表示不做限制. **<font style="color:blue">但是如果要明确指定其中的某一个, 就也必须同时写明另一个</font>** (除非将访问修饰符省略)
+  - 在指定全类名的部分中可以用 * 表示包名和类名任意, **用 `..` 可以表示包的层次深度任意**
+  - **此外类名和方法名支持使用 * 进行模糊匹配**, 比如 `get*` 就表示匹配以 get 开头的方法
+  - **<font style="color:blue">参数列表部分可以用 `(..)` 表示参数列表任意</font>**
+- **第二种是使用 自定义注解 + @annotation 的方式定义切入点表达式**. 想用这种方式的话: 
+  - 首先应该自定义一个注解, 用于标记哪些方法需要被 AOP 拦截, **并且在 @Retention 元注解中指定`RetentionPolicy.RUNTIME`, 保证注解在运行时仍然可以被识别**
+  - 然后在 @Pointcut 注解中使用 @annotaion 指定切入点, **<font style="color:blue">@annotation 括号中指定的就是自定义注解的全类名</font>**
+  - **最后在业务方法上使用自定义注解即可, 想拦截哪个方法就在哪贴注解**, 可以精细控制, 灵活性很强, 另外因为不依赖包名和方法名也降低了耦合度
+  - 但是要注意使用了这种方式后 Spring 会在运行时检查所有 Bean 方法是否被切面中指定的注解标记, 匹配成功后这些方法就会被代理并织入增强逻辑
+    - **<font style="color:blue">所以想被增强的前提是: 这个方法所在的类必须被注册为 Spring 的 Bean</font>**
+
+
+
+最后一步就是在切面类中使用 @Around、@Before、@After 等注解定义具体的增强逻辑, **并在这些注解的参数中直接写明切入点表达式, 或者复用先前用 @Pointcut 注解定义好的切入点**
+
+## AOP的通知类型都有哪些
+
+Spring AOP 提供了五种通知类型, 分别是:
+
+- 前置通知: 使用 @Before 注解标识, 在被代理的目标方法调用之前触发
+- 后置通知: 使用 @After 注解标识, 在被代理的目标方法调用之后触发. **另外从 Spring 5.3 版本开始, 后置通知准确的说是在被代理的目标方法最终结束后执行**
+  - **<font style="color:blue">也就是说后置通知的执行顺序在返回通知或异常通知之后</font>**, 而在 Spring 5.3 版本之前顺序相反
+- 返回通知: 使用 @AfterReturning 注解标识, 在目标方法调用完成, 成功结束后执行
+- 与返回通知相对应的是异常通知: 使用 @AfterThrowing 注解标识, 在目标方法运行时抛出异常后触发. 这里能看出来**<font style="color:blue">返回通知和异常通知两者互斥</font>, 因为如果方法抛出了异常就不会有返回值**
+- 最后是环绕通知: 使用 @Around 注解标识, **环绕通知是所有通知类型中可操作范围最大的一种**, 因为它可以直接拿到目标对象以及要执行的方法
+  - **<font style="color:blue">环绕通知中通过 joinPoint.proceed() 来触发目标方法调用</font>, 可以在其前后都插入自定义逻辑**. 因此它能够完全控制目标方法的执行流程, **甚至可以不调用目标对象的方法**
+
+## AOP中各种通知的使用场景
+
+参考博客: https://www.jb51.net/program/330902a9y.htm
+
+前置通知因为在目标方法执行前执行, 所以比较适用于做**权限校验、参数验证、缓存预检** (也就是缓存命中就提前中断流程) 以及 进行一些初始化操作
+
+
+
+**<font style="color:blue">返回通知适用于数据脱敏、统计方法成功率等场景</font>**. 数据脱敏就是在展示或传输数据时, 对敏感信息进行模糊化、替换等处理, 以防止敏感数据泄露
+
+```java
+@Aspect
+@Component
+public class DesensitizationAspect {
+
+ @AfterReturning(pointcut = "execution(* com.example.service.UserService.getUser(..))",
+                 returning = "user")
+ public void desensitizeUser(User user) {
+     if (user != null) {
+         // 脱敏处理: 手机号、身份证号
+         user.setPhone(maskPhone(user.getPhone()));
+         user.setIdCard(maskIdCard(user.getIdCard()));
+     }
+ }
+
+ private String maskPhone(String phone) {
+     return phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+ }
+
+ private String maskIdCard(String idCard) {
+     return idCard.replaceAll("(\\d{4})\\d{10}(\\d{4})", "$1**********$2");
+ }
+}
+
+// ---------- 演示效果
+String phone = "13812345678";
+//  通过分组 $1 $2, 保留了前3位和后4位, 中间用星号代替, 实现常见脱敏样式
+String masked = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+System.out.println(masked); // 输出：138****5678
+```
+
+
+
+与返回通知互斥的异常通知可以进行**异常记录、告警通知、失败重试**等操作
+
+后置通知无论是否抛出异常都会在目标方法调用后执行, 因此比较适合进行**资源清理、连接关闭**等操作
+
+
+
+环绕通知作为最强大的通知类型, 可以完全控制目标方法的执行, 因此也最为全面. **适用于事务管理、性能监控** 以及 方法的限流和缓存等场景
+
+## AOP的实现原理
+
+> 这里对于实现原理的说明也只是简述, 想了解详细过程可以参阅网上对于 AOP 源码的解读
+
+1. 首先在 Spring 容器启动阶段, 如果启用了 AOP (例如加了 @EnableAspectJAutoProxy 注解, 或者在 SpringBoot 项目中添加了 AOP 相关依赖)
+   - **<font style="color:blue">Spring会自动向容器中注册一个额外的后置处理器</font>, 作用是在Bean初始化完成后, 判断是否需要为该Bean创建代理对象**. 这个后置处理器叫 `AnnotationAwareAspectJAutoProxyCreator`
+
+
+
+2. **在容器初始化过程中, Spring 会扫描并解析所有被 @Aspect 注解标记的类**. 对于这些切面类, Spring 会提取其中定义的切入点和通知方法
+   - **<font style="color:blue">解析后的切面信息会被封装成 Advisor 对象</font>**, 用于后续判断哪些 Bean 需要增强
+
+
+
+3. **当 Bean 初始化完成后, 根据 Bean 的生命周期来说也就是进入了 Bean 的后置处理阶段**, 这个阶段会执行容器中所有注册的后置处理器的处理方法
+   - **<font style="color:blue">所以在这一步中容器启动阶段注册的 AOP 专用后置处理器也会被调用</font>**
+
+   - 此时 Bean 对象虽然已经初始化完毕, **但还没有暴露给用户使用**, 所以 AOP 在此时切入最为合适
+
+
+
+4. 随后在 AOP 后置处理器的处理逻辑中, **<font style="color:blue">Spring 会用目标类中的方法去匹配先前解析出来的 Advisor</font>**
+   - 如果目标类中的方法不匹配任何切入点, 就直接返回原始对象; **如果匹配上了, 说明这个类需要 AOP 增强, 也就需要创建代理对象**
+
+
+
+5. **除非配置了强制使用 CGLIB 代理**, 否则如果这个 Bean 实现了接口, 就使用 JDK 动态代理; 如果没有接口, 就使用 CGLIB 动态代理
+
+   - **<font style="color:blue">代理对象内部会维护一个拦截器链</font>**. 生成代理对象时, Spring 会调用 `AdvisorAdapterRegistry` **把每个匹配的 Advisor 封装成一个拦截器**, 并加入到链中
+   - **<font style="color:blue">这里的拦截器通常是 MethodInterceptor 类型</font>**, 这就是后续执行通知逻辑的关键. **之后 Spring 会将这个代理对象替代原始的 Bean 注册到容器中**
+
+   > 原始对象在代理对象内部持有, 存储在 AdvisedSupport 类的 targetSource 属性中
+   >
+   > 通过 `targetSource.getTarget()` 方法就能拿到真正的原始对象
+
+   
+
+6. 之后当调用这个代理对象的方法时, **Spring 会根据多个切面的优先级以及通知类型**, 自动按顺序执行对应的增强逻辑, 并在合适的时机调用目标方法
 
 
 

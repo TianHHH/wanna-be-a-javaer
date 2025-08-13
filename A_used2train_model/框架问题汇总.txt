@@ -13,6 +13,18 @@ Spring:
 
 	7. Bean的生命周期是什么
 
+	8. 介绍一下IOC
+	8.1 IOC 和 DI的区别是什么
+
+	9. 介绍一下AOP
+
+	10. 怎么使用AOP
+
+	11. AOP的通知类型都有哪些
+	11.1 AOP中各种通知的使用场景
+
+	12. AOP的实现原理
+
 SpringMVC:
 	1. SpringMVC的常用注解
 

@@ -1,0 +1,28 @@
+公共问题
+	1. HashMap 和 Hashtable 的区别
+
+	2. HashMap 和 HashSet的区别
+
+List
+	1. ArrayList的扩容机制
+
+	2. ArrayList 和 LinkedList 的区别
+
+Set
+	1. HashSet是如何实现去重的
+
+Map
+	1. HashMap中put一个数据的过程
+
+	2. HashMap的扩容机制
+	2.1 讲一下rehash
+
+	3. 介绍一下HashMap的存储结构
+	3.1 为什么不直接用红黑树
+
+	4. HashMap从1.7到1.8为什么从头插改成尾插
+
+	5. HashMap为什么线程不安全, 在多线程环境下有什么问题
+	5.1 如何保证HashMap的线程安全
+
+	6. HashMap中一次get()的时间复杂度是多少

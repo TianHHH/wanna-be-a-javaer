@@ -1,0 +1,17 @@
+1. 创建线程的方式
+
+2. synchronized和Lock的区别
+
+3. 多线程下如何避免死锁
+
+线程池:
+	1. 讲一下线程池的参数
+
+	2. 线程池中都有哪些拒绝策略
+
+ThreadLocal:
+	1. 介绍一下ThreadLocal的作用和常见使用场景
+
+	2. 说一下ThreadLocal的底层实现
+
+	3. 为什么ThreadLocal有内存泄漏问题
